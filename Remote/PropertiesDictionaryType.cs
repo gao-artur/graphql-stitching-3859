@@ -1,3 +1,4 @@
+#nullable enable
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,27 +31,27 @@ namespace Remote
         }
 
         // define how a literal is parsed to the native .NET type.
-        public override object? ParseLiteral(IValueNode literal, bool withDefaults = true)
+        public override object ParseLiteral(IValueNode valueSyntax)
         {
-            if (literal == null)
+            if (valueSyntax == null)
             {
-                throw new ArgumentNullException(nameof(literal));
+                throw new ArgumentNullException(nameof(valueSyntax));
             }
 
-            if (literal is ObjectValueNode objectLiteral)
+            if (valueSyntax is ObjectValueNode objectLiteral)
             {
                 var dictionary = objectLiteral.Fields.ToDictionary(x => x.Name.Value, x => x.Value.Value);
                 return dictionary;
             }
 
-            if (literal is NullValueNode)
+            if (valueSyntax is NullValueNode)
             {
                 return null;
             }
 
             throw new ArgumentException(
                 "The string type can only parse string literals.",
-                nameof(literal));
+                nameof(valueSyntax));
         }
 
         public override IValueNode ParseResult(object? resultValue)
@@ -71,6 +72,7 @@ namespace Remote
         }
 
         // define how a native type is parsed into a literal,
+
         public override IValueNode ParseValue(object? runtimeValue)
         {
             if (runtimeValue == null)
